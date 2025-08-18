@@ -30,6 +30,7 @@ class TripsController < ApplicationController
 
   def create
     @trip = Trip.new(trip_params)
+    authorize @trip
     if @trip.save
       redirect_to @trip, notice: 'Trip created successfully.'
     else
@@ -41,6 +42,7 @@ class TripsController < ApplicationController
   end
 
   def update
+    authorize @trip
     if @trip.update(trip_params)
       redirect_to @trip, notice: 'Trip updated successfully.'
     else
@@ -49,6 +51,7 @@ class TripsController < ApplicationController
   end
 
   def destroy
+    authorize @trip
     @trip.destroy
     redirect_to trips_path, notice: 'Trip deleted successfully.'
   end
