@@ -4,6 +4,7 @@ class RoutesController < ApplicationController
 
   def index
     @routes = Route.all
+    authorize @routes
   end
 
   def show
@@ -15,6 +16,7 @@ class RoutesController < ApplicationController
 
   def create
     @route = Route.new(route_params)
+    authorize @routes
     if @route.save
       redirect_to @route, notice: 'Route created successfully.'
     else
@@ -26,6 +28,7 @@ class RoutesController < ApplicationController
   end
 
   def update
+    authorize @routes
     if @route.update(route_params)
       redirect_to @route, notice: 'Route updated successfully.'
     else
@@ -34,6 +37,7 @@ class RoutesController < ApplicationController
   end
 
   def destroy
+    authorize @routes
     @route.destroy
     redirect_to routes_path, notice: 'Route deleted successfully.'
   end
