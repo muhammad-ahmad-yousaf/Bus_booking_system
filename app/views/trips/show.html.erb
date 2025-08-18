@@ -1,0 +1,14 @@
+<h2>Trip</h2>
+<p>Bus: <%= @trip.bus.bus_num %></p>
+<p>Route: <%= @trip.route.start_location %> → <%= @trip.route.end_location %></p>
+<p>Departure: <%= @trip.departure_time %></p>
+<p>Arrival: <%= @trip.arrival_time %></p>
+<p>Available Seats: <%= @trip.avail_seats %></p>
+<p>Fare: <%= number_to_currency(@trip.fare) %></p>
+
+<%= link_to 'Back', trips_path %>
+<% if user_signed_in? && current_user.admin?%>
+  | <%= link_to 'Edit', edit_trip_path(@trip) %>
+<% elsif user_signed_in? %>
+  | <%= link_to 'Book Now', new_booking_path(trip_id: @trip.id) %>
+<% end %>
