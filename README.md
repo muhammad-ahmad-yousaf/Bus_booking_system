@@ -37,8 +37,8 @@ Built with **Rails**, **PostgreSQL**, **Devise** (for authentication), and **Pun
 
 ```bash
 # Clone the repo
-git clone https://github.com/yourusername/bus_booking.git
-cd bus_booking
+git clone https://github.com/yourusername/bus_booking_system.git
+cd bus_booking_system
 
 # Install dependencies
 bundle install
