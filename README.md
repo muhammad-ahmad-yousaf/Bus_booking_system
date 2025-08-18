@@ -1,24 +1,50 @@
-# README
+# 🚌 Bus Booking System
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Ruby on Rails application for managing bus routes, trips, and seat bookings.  
+Built with **Rails**, **PostgreSQL**, **Devise** (for authentication), and **Pundit** (for authorization).
 
-Things you may want to cover:
+---
 
-* Ruby version
+## 🚀 Features
+- User authentication (Sign up / Log in / Log out)
+- Admin panel for managing buses, routes, and trips
+- Seat selection and booking system
+- Trip listing with available seats and fares
+- Role-based access control (via Pundit)
+- Flash messages for booking confirmation/cancellation
+- Responsive UI (Bootstrap)
 
-* System dependencies
+---
 
-* Configuration
+## 🛠 Tech Stack
+- **Backend**: Ruby on Rails
+- **Database**: PostgreSQL
+- **Auth**: Devise
+- **Authorization**: Pundit
+- **Frontend**: Bootstrap
 
-* Database creation
+---
 
-* Database initialization
+## 📦 Installation
 
-* How to run the test suite
+### Prerequisites
+- Ruby (>= 3.0)
+- Rails (>= 7.0)
+- PostgreSQL
+- Bundler
 
-* Services (job queues, cache servers, search engines, etc.)
+### Setup
 
-* Deployment instructions
+```bash
+# Clone the repo
+git clone https://github.com/yourusername/bus_booking.git
+cd bus_booking
 
-* ...
+# Install dependencies
+bundle install
+
+# Setup database
+rails db:create db:migrate db:seed
+
+# Start server
+rails s
