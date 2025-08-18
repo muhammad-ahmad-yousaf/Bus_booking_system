@@ -1,0 +1,20 @@
+<div class="card p-4">
+  <%= form_with(model: bus, local: true) do |form| %>
+    <div class="mb-3">
+      <%= form.label :bus_num, class: "form-label" %>
+      <%= form.text_field :bus_num, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :capacity, class: "form-label" %>
+      <%= form.number_field :capacity, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :bus_type, class: "form-label" %>
+      <%= form.text_field :bus_type, class: "form-control" %>
+    </div>
+
+    <%= form.submit class: "btn btn-primary" %>
+  <% end %>
+</div>

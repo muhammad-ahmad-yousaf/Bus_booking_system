@@ -1,0 +1,7 @@
+<h2>Booking</h2>
+<p>Trip: <%= @booking.trip.route.start_location %> → <%= @booking.trip.route.end_location %></p>
+<p>Departure: <%= @booking.trip.departure_time %></p>
+<p>Seat: <%= @booking.seat_number %></p>
+<p>Status: <%= @booking.booking_status.humanize %></p>
+
+<%= link_to 'Back', bookings_path %>

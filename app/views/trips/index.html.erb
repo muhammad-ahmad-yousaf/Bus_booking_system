@@ -1,0 +1,40 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1>Trips</h1>
+  <%= link_to "Add Trip", new_trip_path, class: "btn btn-success" %>
+</div>
+
+<table class="table table-striped table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Bus</th>
+      <th>Route</th>
+      <th>Departure</th>
+      <th>Arrival</th>
+      <th>Seats</th>
+      <th>Fare</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @trips.each do |trip| %>
+      <tr>
+        <td><%= trip.bus.bus_num %></td>
+        <td><%= trip.route.start_location %> → <%= trip.route.end_location %></td>
+        <td><%= trip.departure_time.strftime("%d %b %Y %I:%M %p") %></td>
+        <td><%= trip.arrival_time.strftime("%d %b %Y %I:%M %p") %></td>
+        <td>
+          <% if trip.avail_seats > 0 %>
+            <span class="badge bg-success"><%= trip.avail_seats %></span>
+          <% else %>
+            <span class="badge bg-danger">Sold Out</span>
+          <% end %>
+        </td>
+        <td><%= number_to_currency(trip.fare) %></td>
+        <td>
+          <%= link_to "Edit", edit_trip_path(trip), class: "btn btn-warning btn-sm" %>
+          <%= link_to "Delete", trip, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

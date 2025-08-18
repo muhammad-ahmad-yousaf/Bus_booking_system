@@ -1,0 +1,33 @@
+<%= form_with(model: trip) do |f| %>
+  <p>
+    <%= f.label :bus_id, "Bus" %><br>
+    <%= f.collection_select :bus_id, Bus.all, :id, :bus_num %>
+  </p>
+
+  <p>
+    <%= f.label :route_id, "Route" %><br>
+    <%= f.collection_select :route_id, Route.all, :id, ->(r){ "#{r.start_location} → #{r.end_location}" } %>
+  </p>
+
+  <p>
+    <%= f.label :departure_time %><br>
+    <%= f.datetime_select :departure_time %>
+  </p>
+
+  <p>
+    <%= f.label :arrival_time %><br>
+    <%= f.datetime_select :arrival_time %>
+  </p>
+
+  <p>
+    <%= f.label :avail_seats %><br>
+    <%= f.number_field :avail_seats %>
+  </p>
+
+  <p>
+    <%= f.label :fare %><br>
+    <%= f.number_field :fare, step: 0.01 %>
+  </p>
+
+  <p><%= f.submit %></p>
+<% end %>

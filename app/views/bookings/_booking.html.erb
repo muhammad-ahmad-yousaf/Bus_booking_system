@@ -1,0 +1,22 @@
+<div id="<%= dom_id booking %>">
+  <p>
+    <strong>User:</strong>
+    <%= booking.user_id %>
+  </p>
+
+  <p>
+    <strong>Trip:</strong>
+    <%= booking.trip_id %>
+  </p>
+
+  <p>
+    <strong>Seat number:</strong>
+    <%= booking.seat_number %>
+  </p>
+
+  <p>
+    <strong>Status:</strong>
+    <%= booking.booking_status.humanize %>
+  </p>
+
+</div>

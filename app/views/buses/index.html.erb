@@ -1,0 +1,28 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1>Buses</h1>
+  <%= link_to "Add Bus", new_bus_path, class: "btn btn-success" %>
+</div>
+
+<table class="table table-striped table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Bus Number</th>
+      <th>Capacity</th>
+      <th>Type</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @buses.each do |bus| %>
+      <tr>
+        <td><%= bus.bus_num %></td>
+        <td><%= bus.capacity %></td>
+        <td><%= bus.bus_type %></td>
+        <td>
+          <%= link_to "Edit", edit_bus_path(bus), class: "btn btn-warning btn-sm" %>
+          <%= link_to "Delete", bus, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

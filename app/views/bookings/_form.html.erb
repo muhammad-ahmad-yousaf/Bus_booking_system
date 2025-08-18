@@ -1,0 +1,18 @@
+<%= form_with(model: booking) do |f| %>
+  <p>
+    <%= f.label :trip_id, "Trip" %><br>
+    <%= f.collection_select :trip_id, Trip.all, :id, ->(t){ "#{t.route.start_location} → #{t.route.end_location} | #{t.departure_time}" }, selected: params[:trip_id] %>
+  </p>
+
+  <p>
+    <%= f.label :seat_number %><br>
+    <%= f.number_field :seat_number %>
+  </p>
+
+  <p>
+    <%= f.label :booking_status %><br>
+    <%= f.select :booking_status, Booking.booking_statuses.keys.map { |k| [k.humanize, k] } %>
+  </p>
+
+  <p><%= f.submit %></p>
+<% end %>
