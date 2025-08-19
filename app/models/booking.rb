@@ -2,7 +2,7 @@ class Booking < ApplicationRecord
   belongs_to :user
   belongs_to :trip
 
-  enum :booking_status, [ :pending , :confirmed, :cancelled ]
+  enum :status, [ :pending , :confirmed, :cancelled ]
   validates :seat_number, presence: true
   validate :seat_not_already_booked
 
