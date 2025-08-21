@@ -12,23 +12,27 @@ class TripsController < ApplicationController
 
 
   def search
+    if current_user&.admin?
+      redirect_to bookings_path, alert: "Admins cannot search"
+      return
+    end
+
     @routes = Route.all
-    @trips = Trip.includes(:bus, :route).all
+    @trips = []
 
-    # Filter by date if provided
-    if params[:date].present?
-      date = Date.parse(params[:date]) rescue nil
-      @trips = @trips.where(departure_time: date.beginning_of_day..date.end_of_day) if date
+    if params[:date].present? || (params[:start_location].present? && params[:end_location].present?)
+      @trips = Trip.includes(:bus, :route)
+
+      if params[:date].present?
+        date = Date.parse(params[:date]) rescue nil
+        @trips = @trips.where(departure_time: date.beginning_of_day..date.end_of_day) if date
+      end
+
+      if params[:start_location].present? && params[:end_location].present?
+        @trips = @trips.joins(:route).where(routes: { start_location: params[:start_location], end_location: params[:end_location] })
+      end
+      @trips = @trips.where("departure_time >= ?", Time.current)
     end
-
-    # Filter by route if provided
-    if params[:start_location].present? && params[:end_location].present?
-      @trips = @trips.joins(:route)
-                    .where(routes: { start_location: params[:start_location], end_location: params[:end_location] })
-    end
-
-    # Exclude past trips
-    @trips = @trips.where("departure_time >= ?", Time.current)
   end
 
 

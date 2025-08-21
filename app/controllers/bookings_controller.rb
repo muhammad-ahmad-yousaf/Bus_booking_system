@@ -13,20 +13,28 @@ class BookingsController < ApplicationController
   end
 
   def new
-    @booking = current_user.bookings.new(trip_id: @trip.id)
-    authorize @booking
+    if current_user.admin?
+      redirect_to bookings_path, alert: "Admins cannot create bookings."
+    else
+      @booking = current_user.bookings.new(trip_id: @trip.id)
+      authorize @booking
+    end
   end
 
   def create
-    @booking = current_user.bookings.new(booking_params)
-    @booking.trip_id ||= @trip.id  # make sure trip_id is always set
-    authorize @booking
-
-    if @booking.save
-      redirect_to bookings_path, notice: "Booking created successfully."
+    if current_user.admin?
+      redirect_to bookings_path, alert: "Admins cannot create bookings."
     else
-      flash.now[:alert] = "Please select a seat before confirming."
-      render :new, status: :unprocessable_entity
+      @booking = current_user.bookings.new(booking_params)
+      @booking.trip_id ||= @trip.id  # make sure trip_id is always set
+      authorize @booking
+
+      if @booking.save
+        redirect_to bookings_path, notice: "Booking created successfully."
+      else
+        flash.now[:alert] = "Please select a seat before confirming."
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 
