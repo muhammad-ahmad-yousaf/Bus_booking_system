@@ -3,6 +3,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :bookings
+  validates :name, presence: true
 
   enum :role, [:user,:admin]
 end

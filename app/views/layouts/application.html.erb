@@ -10,17 +10,21 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </head>
   <body>
+    
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
+        <!-- Brand -->
         <%= link_to "Bus Booking", root_path, class: "navbar-brand" %>
-
+        
+        <!-- Mobile toggle -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>
         </button>
 
+        <!-- Navbar content -->
         <div class="collapse navbar-collapse" id="navbarNav">
-          <!-- Left side nav -->
-          <ul class="navbar-nav me-auto">
+          <!-- Left side -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <% if user_signed_in? && current_user.admin? %>
               <li class="nav-item"><%= link_to "Trips", trips_path, class: "nav-link" %></li>
               <li class="nav-item"><%= link_to "Buses", buses_path, class: "nav-link" %></li>
@@ -31,30 +35,27 @@
             <% end %>
           </ul>
 
-          <!-- Right side nav -->
+          <!-- Right side -->
           <ul class="navbar-nav">
             <% if user_signed_in? %>
               <!-- Profile Dropdown -->
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <%= current_user.name.presence%>
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <!-- Circle profile icon -->
+                  <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center me-2" style="width:32px; height:32px;">
+                    <%= current_user.name.first.upcase %>
+                  </div>
+                  <span><%= current_user.name %></span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                  <li>
-                    
-                  </li>
-                  <li>
-                    <%= link_to "Edit Profile", edit_user_registration_path, class: "dropdown-item" %>
-                  </li>
+                  <li><%= link_to "Edit Profile", edit_user_registration_path, class: "dropdown-item" %></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li>
-                    <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
-                  </li>
+                  <li><%= link_to "Logout", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
                 </ul>
               </li>
             <% else %>
-              <li class="nav-item"><%= link_to "Sign Up", new_user_registration_path, class: "nav-link" %></li>
-              <li class="nav-item"><%= link_to "Login", new_user_session_path, class: "nav-link" %></li>
+              <li class="nav-item me-2"><%= link_to "Sign Up", new_user_registration_path, class: "btn btn-outline-light" %></li>
+              <li class="nav-item"><%= link_to "Login", new_user_session_path, class: "btn btn-warning" %></li>
             <% end %>
           </ul>
         </div>
