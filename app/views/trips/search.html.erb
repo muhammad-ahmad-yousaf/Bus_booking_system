@@ -13,8 +13,9 @@
       </div>
       <div class="col-md-3">
         <%= label_tag :date, "Travel Date", class: "form-label" %>
-        <%= date_field_tag :date, params[:date], class: "form-control" %>
+        <%= date_field_tag :date, params[:date], min: Date.current.strftime("%Y-%m-%d"), class: "form-control" %>
       </div>
+
       <div class="col-md-1 d-flex align-items-end">
         <%= submit_tag "Search", class: "btn btn-primary w-100" %>
       </div>
@@ -65,7 +66,7 @@
         <% end %>
       </tbody>
     </table>
-  <% elsif params[:start_location].present? %>
-    <div class="alert alert-warning mt-4">No trips found for the selected route and date.</div>
-  <% end %>
+  <% elsif params[:date].present? || params[:start_location].present? || params[:end_location].present? %>
+  <div class="alert alert-warning mt-4">No trips found for the selected search criteria.</div>
+<% end %>
 </div>

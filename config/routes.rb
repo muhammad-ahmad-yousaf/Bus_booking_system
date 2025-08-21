@@ -8,7 +8,6 @@ Rails.application.routes.draw do
   
 
 
-
   root "trips#search"
   resources :trips do
     collection do

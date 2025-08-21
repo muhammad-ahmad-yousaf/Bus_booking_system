@@ -1,33 +1,121 @@
-<%= form_with(model: trip) do |f| %>
-  <p>
-    <%= f.label :bus_id, "Bus" %><br>
-    <%= f.collection_select :bus_id, Bus.all, :id, :bus_num %>
-  </p>
+<%= form_with(model: trip, local: true, class: "card shadow-sm") do |f| %>
+  <div class="card-header">
+    <h5 class="mb-0"><%= trip.persisted? ? "Edit Trip" : "Create Trip" %></h5>
+  </div>
 
-  <p>
-    <%= f.label :route_id, "Route" %><br>
-    <%= f.collection_select :route_id, Route.all, :id, ->(r){ "#{r.start_location} → #{r.end_location}" } %>
-  </p>
+  <div class="card-body">
+    <% if trip.errors.any? %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong><%= pluralize(trip.errors.count, "error") %> prevented this trip from being saved:</strong>
+        <ul class="mb-0">
+          <% trip.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
 
-  <p>
-    <%= f.label :departure_time %><br>
-    <%= f.datetime_select :departure_time %>
-  </p>
+    <div class="row g-3">
+      <!-- Bus -->
+      <div class="col-md-6">
+        <%= f.label :bus_id, "Bus", class: "form-label" %>
+        <%= f.collection_select :bus_id, Bus.all, :id, :bus_num,
+              { prompt: "Select a Bus" },
+              class: "form-select #{'is-invalid' if trip.errors[:bus].any? || trip.errors[:bus_id].any?}" %>
+        <% (trip.errors[:bus] + trip.errors[:bus_id]).each do |e| %>
+          <div class="invalid-feedback"><%= e %></div>
+        <% end %>
+      </div>
 
-  <p>
-    <%= f.label :arrival_time %><br>
-    <%= f.datetime_select :arrival_time %>
-  </p>
+      <!-- Route -->
+      <div class="col-md-6">
+        <%= f.label :route_id, "Route", class: "form-label" %>
+        <%= f.collection_select :route_id, Route.all, :id, ->(r){ "#{r.start_location} → #{r.end_location}" },
+              { prompt: "Select a Route" },
+              class: "form-select #{'is-invalid' if trip.errors[:route].any? || trip.errors[:route_id].any?}" %>
+        <% (trip.errors[:route] + trip.errors[:route_id]).each do |e| %>
+          <div class="invalid-feedback"><%= e %></div>
+        <% end %>
+      </div>
 
-  <p>
-    <%= f.label :avail_seats %><br>
-    <%= f.number_field :avail_seats %>
-  </p>
+      <!-- Departure & Arrival -->
+      <div class="col-md-6">
+        <%= f.label :departure_time, class: "form-label" %>
+        <%= f.datetime_local_field :departure_time,
+              value: (trip.departure_time&.strftime("%Y-%m-%dT%H:%M")),
+              min: Time.current.strftime("%Y-%m-%dT%H:%M"),
+              class: "form-control #{'is-invalid' if trip.errors[:departure_time].any?}" %>
+        <% trip.errors[:departure_time].each do |e| %>
+          <div class="invalid-feedback"><%= e %></div>
+        <% end %>
+        <div class="form-text">Must not be in the past.</div>
+      </div>
 
-  <p>
-    <%= f.label :fare %><br>
-    <%= f.number_field :fare, step: 0.01 %>
-  </p>
+      <div class="col-md-6">
+        <%= f.label :arrival_time, class: "form-label" %>
+        <%= f.datetime_local_field :arrival_time,
+              value: (trip.arrival_time&.strftime("%Y-%m-%dT%H:%M")),
+              class: "form-control #{'is-invalid' if trip.errors[:arrival_time].any?}",
+              data: { controller: "trip-time" } %>
+        <% trip.errors[:arrival_time].each do |e| %>
+          <div class="invalid-feedback"><%= e %></div>
+        <% end %>
+        <div class="form-text">Must be after the departure time.</div>
+      </div>
 
-  <p><%= f.submit %></p>
+      <!-- Seats -->
+      <div class="col-md-6">
+        <%= f.label :avail_seats, "Available Seats", class: "form-label" %>
+        <%= f.number_field :avail_seats, min: 1, class: "form-control #{'is-invalid' if trip.errors[:avail_seats].any?}" %>
+        <% trip.errors[:avail_seats].each do |e| %>
+          <div class="invalid-feedback"><%= e %></div>
+        <% end %>
+      </div>
+
+      <!-- Fare -->
+      <div class="col-md-6">
+        <%= f.label :fare, "Fare", class: "form-label" %>
+        <%= f.number_field :fare, step: 0.01, min: 0, class: "form-control #{'is-invalid' if trip.errors[:fare].any?}" %>
+        <% trip.errors[:fare].each do |e| %>
+          <div class="invalid-feedback"><%= e %></div>
+        <% end %>
+        <div class="form-text">Enter the ticket price.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer d-flex gap-2">
+    <%= f.submit (trip.persisted? ? "Update Trip" : "Save Trip"), class: "btn btn-primary" %>
+    <%= link_to "Cancel", (trip.persisted? ? trip_path(trip) : trips_path), class: "btn btn-outline-secondary" %>
+  </div>
 <% end %>
+
+<!-- Tiny JS guard: arrival >= departure and arrival min follows departure -->
+<script>
+  document.addEventListener("turbo:load", syncTimes);
+  document.addEventListener("DOMContentLoaded", syncTimes);
+
+  function syncTimes() {
+    const dep = document.getElementById("trip_departure_time");
+    const arr = document.getElementById("trip_arrival_time");
+    if (!dep || !arr) return;
+
+    const setMins = () => {
+      // Keep departure >= now
+      const now = new Date();
+      const pad = n => String(n).padStart(2, "0");
+      const nowLocal = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+      if (!dep.min || dep.min < nowLocal) dep.min = nowLocal;
+
+      // Arrival cannot be before departure
+      if (dep.value) {
+        arr.min = dep.value;
+        if (arr.value && arr.value < dep.value) arr.value = dep.value;
+      }
+    };
+
+    setMins();
+    dep.addEventListener("change", setMins);
+  }
+</script>

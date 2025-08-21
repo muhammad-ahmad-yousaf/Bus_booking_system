@@ -23,9 +23,9 @@ class BookingsController < ApplicationController
     authorize @booking
 
     if @booking.save
-      redirect_to bookings_path, notice: 'Booking created successfully.'
+      redirect_to bookings_path, notice: "Booking created successfully."
     else
-      flash.now[:alert] = 'Please select a seat before confirming.'
+      flash.now[:alert] = "Please select a seat before confirming."
       render :new, status: :unprocessable_entity
     end
   end
@@ -36,7 +36,7 @@ class BookingsController < ApplicationController
   def update
     authorize @booking
     if @booking.update(booking_params)
-      redirect_to @booking, notice: 'Booking updated successfully.'
+      redirect_to @booking, notice: "Booking updated successfully."
     else
       render :edit
     end
@@ -45,7 +45,7 @@ class BookingsController < ApplicationController
   def destroy
     authorize @booking
     @booking.destroy
-    redirect_to bookings_path, notice: 'Booking canceled successfully.'
+    redirect_to bookings_path, notice: "Booking canceled successfully."
   end
 
   private
@@ -64,6 +64,6 @@ class BookingsController < ApplicationController
     end
 
     def booking_params
-      params.require(:booking).permit(:trip_id, :seat_number, :booking_status)
+      params.require(:booking).permit(:trip_id, :seat_number, :status)
     end
 end
