@@ -13,13 +13,22 @@ class TripsController < ApplicationController
 
   def search
     @routes = Route.all
-    if params[:start_location].present? && params[:end_location].present?
-      @trips = Trip.joins(:route)
-                   .where(routes: { start_location: params[:start_location], end_location: params[:end_location] })
-                   .where("DATE(departure_time) = ?", params[:date])
-    else
-      @trips = []
+    @trips = Trip.includes(:bus, :route).all
+
+    # Filter by date if provided
+    if params[:date].present?
+      date = Date.parse(params[:date]) rescue nil
+      @trips = @trips.where(departure_time: date.beginning_of_day..date.end_of_day) if date
     end
+
+    # Filter by route if provided
+    if params[:start_location].present? && params[:end_location].present?
+      @trips = @trips.joins(:route)
+                    .where(routes: { start_location: params[:start_location], end_location: params[:end_location] })
+    end
+
+    # Exclude past trips
+    @trips = @trips.where("departure_time >= ?", Time.current)
   end
 
 
@@ -34,7 +43,7 @@ class TripsController < ApplicationController
     if @trip.save
       redirect_to @trip, notice: 'Trip created successfully.'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -46,7 +55,7 @@ class TripsController < ApplicationController
     if @trip.update(trip_params)
       redirect_to @trip, notice: 'Trip updated successfully.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

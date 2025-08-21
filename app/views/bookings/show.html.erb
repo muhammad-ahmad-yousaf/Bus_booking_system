@@ -2,6 +2,6 @@
 <p>Trip: <%= @booking.trip.route.start_location %> → <%= @booking.trip.route.end_location %></p>
 <p>Departure: <%= @booking.trip.departure_time %></p>
 <p>Seat: <%= @booking.seat_number %></p>
-<p>Status: <%= @booking.booking_status.humanize %></p>
+<p>Status: <%= @booking.status&.humanize || "Pending" %></p>
 
-<%= link_to 'Back', bookings_path %>
+<%= link_to "Back", bookings_path %>

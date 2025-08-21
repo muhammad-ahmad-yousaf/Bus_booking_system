@@ -138,15 +138,16 @@ const initSeatPicker = () => {
     if (!hidden.value) {
       e.preventDefault(); // stop the form submission
       if (submitBtn) {
-        submitBtn.disabled = false; // 🔹 re-enable the button so it can submit again
-        submitBtn.removeAttribute("data-turbo-submits-with"); // remove turbo’s lock
+        submitBtn.disabled = false;
+        submitBtn.removeAttribute("data-turbo-submits-with");
+
       }
       alert("Please select a seat before confirming your booking.");
     }
   });
 };
 
-//document.addEventListener("turbo:load", initSeatPicker);
+document.addEventListener("turbo:load", initSeatPicker);
 document.addEventListener("DOMContentLoaded", initSeatPicker);
 
 </script>

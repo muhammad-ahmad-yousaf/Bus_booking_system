@@ -1,12 +1,15 @@
-<div id="<%= dom_id route %>">
-  <p>
-    <strong>Start location:</strong>
-    <%= route.start_location %>
-  </p>
+<div id="<%= dom_id(route) %>" class="card shadow-sm mb-3">
+  <div class="card-body">
+    <h5 class="card-title">Route</h5>
+    
+    <p class="mb-2">
+      <strong class="text-primary">Start Location:</strong>
+      <span class="text-dark"><%= route.start_location %></span>
+    </p>
 
-  <p>
-    <strong>End location:</strong>
-    <%= route.end_location %>
-  </p>
-
+    <p class="mb-0">
+      <strong class="text-success">End Location:</strong>
+      <span class="text-dark"><%= route.end_location %></span>
+    </p>
+  </div>
 </div>

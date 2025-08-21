@@ -16,11 +16,11 @@ class RoutesController < ApplicationController
 
   def create
     @route = Route.new(route_params)
-    authorize @routes
+    authorize @route
     if @route.save
       redirect_to @route, notice: 'Route created successfully.'
     else
-      render :new
+      render :new, status: :unprocessable_entity 
     end
   end
 
@@ -28,16 +28,16 @@ class RoutesController < ApplicationController
   end
 
   def update
-    authorize @routes
+    authorize @route
     if @route.update(route_params)
       redirect_to @route, notice: 'Route updated successfully.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    authorize @routes
+    authorize @route
     @route.destroy
     redirect_to routes_path, notice: 'Route deleted successfully.'
   end

@@ -10,8 +10,8 @@
   </p>
 
   <p>
-    <%= f.label :booking_status %><br>
-    <%= f.select :booking_status, Booking.booking_statuses.keys.map { |k| [k.humanize, k] } %>
+    <%= f.label :status %><br>
+    <%= f.select :status, Booking.statuses.keys.map { |k| [k.humanize, k] } %>
   </p>
 
   <p><%= f.submit %></p>
