@@ -16,7 +16,7 @@
         <!-- Brand -->
         <% if user_signed_in? && current_user.admin? %>
           <%= link_to "Bus Booking System", bookings_path, class: "navbar-brand" %>
-        <% elsif user_signed_in? && current_user.user? %>
+        <% else %>
           <%= link_to "Bus Booking System", root_path, class: "navbar-brand" %>
         <% end %>
         
@@ -33,6 +33,7 @@
               <li class="nav-item"><%= link_to "Trips", trips_path, class: "nav-link" %></li>
               <li class="nav-item"><%= link_to "Buses", buses_path, class: "nav-link" %></li>
               <li class="nav-item"><%= link_to "Routes", routes_path, class: "nav-link" %></li>
+              <li class="nav-item"><%= link_to "All Users", users_path, class: "nav-link" %></li>
             <% elsif user_signed_in? && current_user.user? %>
               <li class="nav-item"><%= link_to "My Bookings", bookings_path, class: "nav-link" %></li>
             <% end %>

@@ -1,0 +1,29 @@
+<h2>User Details</h2>
+
+<p><strong>Name:</strong> <%= @user.name %></p>
+<p><strong>Email:</strong> <%= @user.email %></p>
+<p><strong>Role:</strong> <%= @user.admin? ? "Admin" : "User" %></p>
+
+<h3>Bookings</h3>
+<% if @user.bookings.any? %>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Trip</th>
+        <th>Seat</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @user.bookings.each do |booking| %>
+        <tr>
+          <td><%= booking.trip.route.start_location %> → <%= booking.trip.route.end_location %></td>
+          <td><%= booking.seat_number %></td>
+          <td><%= booking.status.humanize %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No bookings found.</p>
+<% end %>

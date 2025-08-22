@@ -20,7 +20,7 @@ class RoutesController < ApplicationController
     if @route.save
       redirect_to @route, notice: 'Route created successfully.'
     else
-      render :new, status: :unprocessable_entity 
+      render :new, status: :unprocessable_entity
     end
   end
 

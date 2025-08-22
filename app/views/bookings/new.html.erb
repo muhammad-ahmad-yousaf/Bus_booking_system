@@ -49,17 +49,17 @@
           <% seat = 1 %>
           <% rows = (total_seats / 4.0).ceil %>
           <% rows.times do %>
-            <% left = [seat, seat + 1] %>
-            <% right = [seat + 2, seat + 3] %>
+            <% left = [ seat, seat + 1 ] %>
+            <% right = [ seat + 2, seat + 3 ] %>
             <% seat += 4 %>
 
             <% left.each do |s| %>
               <% next if s > total_seats %>
               <% is_booked = @booked_seats.include?(s) %>
               <button type="button"
-                      class="seat btn w-100 <%= is_booked ? 'btn-secondary' : 'btn-success' %> <%= 'active' if selected_seat.to_i == s %>"
+                      class="seat btn w-100 <%= is_booked ? "btn-secondary" : "btn-success" %> <%= "active" if selected_seat.to_i == s %>"
                       data-seat="<%= s %>"
-                      <%= 'disabled' if is_booked %>>
+                      <%= "disabled" if is_booked %>>
                 <%= s %>
               </button>
             <% end %>
@@ -70,9 +70,9 @@
               <% next if s > total_seats %>
               <% is_booked = @booked_seats.include?(s) %>
               <button type="button"
-                      class="seat btn w-100 <%= is_booked ? 'btn-secondary' : 'btn-success' %> <%= 'active' if selected_seat.to_i == s %>"
+                      class="seat btn w-100 <%= is_booked ? "btn-secondary" : "btn-success" %> <%= "active" if selected_seat.to_i == s %>"
                       data-seat="<%= s %>"
-                      <%= 'disabled' if is_booked %>>
+                      <%= "disabled" if is_booked %>>
                 <%= s %>
               </button>
             <% end %>
