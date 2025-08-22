@@ -2,7 +2,7 @@
 <p>From: <%= @route.start_location %></p>
 <p>To: <%= @route.end_location %></p>
 
-<%= link_to 'Back', routes_path %>
+<%= link_to "Back", routes_path %>
 <% if user_signed_in? && current_user.admin? %>
-  | <%= link_to 'Edit', edit_route_path(@route) %>
+  | <%= link_to "Edit", edit_route_path(@route) %>
 <% end %>

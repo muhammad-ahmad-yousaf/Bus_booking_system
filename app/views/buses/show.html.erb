@@ -2,7 +2,7 @@
 <p>Capacity: <%= @bus.capacity %></p>
 <p>Type: <%= @bus.bus_type %></p>
 
-<%= link_to 'Back', buses_path %>
+<%= link_to "Back", buses_path %>
 <% if user_signed_in? && current_user.admin? %>
-  | <%= link_to 'Edit', edit_bus_path(@bus) %>
+  | <%= link_to "Edit", edit_bus_path(@bus) %>
 <% end %>

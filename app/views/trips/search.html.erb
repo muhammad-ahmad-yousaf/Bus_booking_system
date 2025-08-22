@@ -50,7 +50,7 @@
                 <span class="badge bg-danger">Sold Out</span>
               <% end %>
             </td>
-            <td><%= number_to_currency(trip.fare) %></td>
+            <td>Rs. <%= trip.fare %></td>
             <td>
               <% if trip.avail_seats > 0 %>
                 <% if user_signed_in? %>

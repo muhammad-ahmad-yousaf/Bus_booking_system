@@ -1,80 +1,81 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-# Clear existing data (optional in dev)
-# Clear existing data (optional in dev)
-Booking.destroy_all
-Trip.destroy_all
-Route.destroy_all
-Bus.destroy_all
-User.destroy_all
+require 'faker'
 
-# Create Users
-users = []
-5.times do |i|
-  users << User.create!(
-    name: "User#{i+1}",
-    phone: "+923039854#{i+1}",
-    email: "user#{i + 1}@example.com",
+# === USERS ===
+puts "Creating Admin..."
+admin = User.find_or_create_by!(email: "admin@example.com") do |user|
+  user.name = "Admin User"
+  user.phone = "03001234567"
+  user.password = "password"
+  user.role = 1  # assuming 0=user, 1=admin
+end
+
+puts "Creating Users..."
+50.times do
+  User.create!(
+    name: Faker::Name.name,
+    phone: Faker::PhoneNumber.cell_phone_in_e164,
+    email: Faker::Internet.unique.email,
     password: "password",
-    password_confirmation: "password"
+    role: 0
   )
 end
-users << User.create!(
-    name: "Ahmad",
-    phone: "+9230398549",
-    email: "admin@example.com",
-    role: 1, # This is my Admin
-    password: "password",
-    password_confirmation: "password"
+
+users = User.where(role: 0).to_a
+
+# === ROUTES ===
+puts "Creating Routes..."
+20.times do
+  Route.create!(
+    start_location: Faker::Address.city,
+    end_location: Faker::Address.city
   )
+end
+routes = Route.all
 
-
-
-# Create Buses
-buses = [
-  Bus.create!(bus_num: "BUS101", capacity: 40, bus_type: "Luxury"),
-  Bus.create!(bus_num: "BUS102", capacity: 35, bus_type: "Standard"),
-  Bus.create!(bus_num: "BUS103", capacity: 50, bus_type: "Mini")
-]
-
-# Create Routes
-routes = [
-  Route.create!(start_location: "Karachi", end_location: "Lahore"),
-  Route.create!(start_location: "Islamabad", end_location: "Multan"),
-  Route.create!(start_location: "Peshawar", end_location: "Quetta")
-]
-
-# Create Trips
-trips = [
-  Trip.create!(
-    bus: buses[0],
-    route: routes[0],
-    departure_time: DateTime.now + 1.day + 8.hours,
-    arrival_time: DateTime.now + 1.day + 18.hours,
-    avail_seats: 40,
-    fare: 2500.0
-  ),
-  Trip.create!(
-    bus: buses[1],
-    route: routes[1],
-    departure_time: DateTime.now + 2.days + 7.hours,
-    arrival_time: DateTime.now + 2.days + 15.hours,
-    avail_seats: 35,
-    fare: 1800.0
-  ),
-  Trip.create!(
-    bus: buses[2],
-    route: routes[2],
-    departure_time: DateTime.now + 3.days + 9.hours,
-    arrival_time: DateTime.now + 3.days + 19.hours,
-    avail_seats: 50,
-    fare: 3000.0
+# === BUSES ===
+puts "Creating Buses..."
+30.times do
+  Bus.create!(
+    bus_num: Faker::Vehicle.license_plate,
+    capacity: rand(30..60),
+    bus_type: ["AC", "Non-AC", "Luxury"].sample
   )
-]
+end
+buses = Bus.all
+
+# === TRIPS ===
+puts "Creating Trips..."
+200.times do
+  route = routes.sample
+  bus = buses.sample
+  departure = Faker::Time.forward(days: 30, period: :morning)
+  arrival = departure + rand(2..10).hours
+
+  Trip.create!(
+    bus: bus,
+    route: route,
+    departure_time: departure,
+    arrival_time: arrival,
+    avail_seats: bus.capacity,
+    fare: rand(500..5000)
+  )
+end
+trips = Trip.all
+
+# === BOOKINGS ===
+puts "Creating Bookings..."
+500.times do
+  trip = trips.sample
+  user = users.sample
+  seat_num = rand(1..trip.bus.capacity)
+
+  # Avoid duplicate seat bookings for the same trip
+  next if Booking.exists?(trip: trip, seat_number: seat_num)
+
+  Booking.create!(
+    user: user,
+    trip: trip,
+    seat_number: seat_num,
+    status: %w[pending confirmed cancelled].sample
+  )
+end

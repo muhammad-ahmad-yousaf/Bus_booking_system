@@ -31,7 +31,7 @@
       <!-- Route -->
       <div class="col-md-6">
         <%= f.label :route_id, "Route", class: "form-label" %>
-        <%= f.collection_select :route_id, Route.all, :id, ->(r){ "#{r.start_location} → #{r.end_location}" },
+        <%= f.collection_select :route_id, Route.all, :id, ->(r) { "#{r.start_location} → #{r.end_location}" },
               { prompt: "Select a Route" },
               class: "form-select #{'is-invalid' if trip.errors[:route].any? || trip.errors[:route_id].any?}" %>
         <% (trip.errors[:route] + trip.errors[:route_id]).each do |e| %>

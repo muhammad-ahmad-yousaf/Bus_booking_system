@@ -1,7 +1,17 @@
+<% if @booking.errors.any? %>
+  <div class="alert alert-danger">
+    <h4><%= pluralize(@booking.errors.count, "error") %> prohibited this booking from being saved:</h4>
+    <ul>
+      <% @booking.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 <%= form_with(model: booking) do |f| %>
   <p>
     <%= f.label :trip_id, "Trip" %><br>
-    <%= f.collection_select :trip_id, Trip.all, :id, ->(t){ "#{t.route.start_location} → #{t.route.end_location} | #{t.departure_time}" }, selected: params[:trip_id] %>
+    <%= f.collection_select :trip_id, Trip.all, :id, ->(t) { "#{t.route.start_location} → #{t.route.end_location} | #{t.departure_time}" }, selected: params[:trip_id] %>
   </p>
 
   <p>
@@ -11,7 +21,7 @@
 
   <p>
     <%= f.label :status %><br>
-    <%= f.select :status, Booking.statuses.keys.map { |k| [k.humanize, k] } %>
+    <%= f.select :status, Booking.statuses.keys.map { |k| [ k.humanize, k ] } %>
   </p>
 
   <p><%= f.submit %></p>

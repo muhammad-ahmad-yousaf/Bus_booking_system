@@ -4,7 +4,7 @@ class BookingsController < ApplicationController
   before_action :set_trip, only: [:new, :create]
 
   def index
-    @bookings = policy_scope(Booking)
+    @bookings = policy_scope(Booking).order(created_at: :desc).page(params[:page]).per(20)
     authorize Booking
   end
 
@@ -46,7 +46,7 @@ class BookingsController < ApplicationController
     if @booking.update(booking_params)
       redirect_to @booking, notice: "Booking updated successfully."
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

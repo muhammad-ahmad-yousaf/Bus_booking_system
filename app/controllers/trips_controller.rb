@@ -3,7 +3,7 @@ class TripsController < ApplicationController
   before_action :set_trip, only: [:show, :edit, :update, :destroy]
 
   def index
-    @trips = Trip.includes(:bus, :route).all
+    @trips = Trip.includes(:bus, :route).all.order(created_at: :desc).page(params[:page]).per(10)
     authorize Trip
   end
 
@@ -13,7 +13,7 @@ class TripsController < ApplicationController
 
   def search
     if current_user&.admin?
-      redirect_to bookings_path, alert: "Admins cannot search"
+      redirect_to bookings_path
       return
     end
 
