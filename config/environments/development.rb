@@ -30,6 +30,7 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
+  config.action_mailer.logger = Logger.new(STDOUT)
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
@@ -44,8 +45,8 @@ Rails.application.configure do
     address:              "smtp.gmail.com",
     port:                 587,
     domain:               "localhost",
-    user_name:            "satranger611@gmail.com",   # your Gmail
-    password:             "tlatowqicadfvaoi",         # your Gmail App Password
+    user_name:            Rails.application.credentials.dig(:email),   # your Gmail
+    password:             Rails.application.credentials.dig(:password),         # your Gmail App Password
     authentication:       "plain",
     enable_starttls_auto: true
   }

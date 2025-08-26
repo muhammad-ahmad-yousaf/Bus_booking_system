@@ -30,7 +30,8 @@ class BookingsController < ApplicationController
       authorize @booking
 
       if @booking.save
-        redirect_to bookings_path, notice: "Booking created successfully."
+        BookingMailer.ticket_email(@booking).deliver_now
+        redirect_to bookings_path, notice: "Booking created successfully! Your ticket is sent to your email"
       else
         flash.now[:alert] = "Please select a seat before confirming."
         render :new, status: :unprocessable_entity
