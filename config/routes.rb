@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   resources :routes
   resources :users, only: [:index, :show]
 
+  match "*unmatched", to: "errors#not_found", via: :all
+
 
 
 
