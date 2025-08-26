@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        padding: 20px;
+      }
+      .card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin: auto;
+        max-width: 600px;
+      }
+      h2 {
+        color: #198754;
+        margin-bottom: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      table th, table td {
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        text-align: left;
+      }
+      table th {
+        background-color: #212529;
+        color: #fff;
+      }
+      .badge {
+        display: inline-block;
+        padding: 0.35em 0.65em;
+        font-size: 0.9em;
+        border-radius: 0.5rem;
+      }
+      .bg-success {
+        background-color: #198754;
+        color: #fff;
+      }
+      .bg-danger {
+        background-color: #dc3545;
+        color: #fff;
+      }
+      .footer {
+        font-size: 0.85em;
+        color: #6c757d;
+        margin-top: 15px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h2>Your Ticket Confirmation</h2>
+      <p>Hello <%= @user.email %>,</p>
+      <p>Thank you for booking with us! Here are your ticket details:</p>
+
+      <table>
+        <tr>
+          <th>Bus</th>
+          <td><%= @trip.bus.bus_num %></td>
+        </tr>
+        <tr>
+          <th>Route</th>
+          <td><%= @trip.route.start_location %> → <%= @trip.route.end_location %></td>
+        </tr>
+        <tr>
+          <th>Departure</th>
+          <td><%= @trip.departure_time.strftime("%d %b %Y %I:%M %p") %></td>
+        </tr>
+        <tr>
+          <th>Arrival</th>
+          <td><%= @trip.arrival_time.strftime("%d %b %Y %I:%M %p") %></td>
+        </tr>
+        <tr>
+          <th>Seat Number</th>
+          <td>
+            <% if @trip.avail_seats > 0 %>
+              <span class="badge bg-success"><%= @booking.seat_number %></span>
+            <% else %>
+              <span class="badge bg-danger">Sold Out</span>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>Fare</th>
+          <td>Rs. <%= @trip.fare %></td>
+        </tr>
+      </table>
+
+      <p>Please present this email as proof of your booking when boarding.</p>
+      <p>We wish you a safe and pleasant journey!</p>
+
+      <div class="footer">
+        © <%= Date.today.year %> Your Bus Company — All rights reserved
+      </div>
+    </div>
+  </body>
+</html>
