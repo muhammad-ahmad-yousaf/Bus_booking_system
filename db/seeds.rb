@@ -38,7 +38,7 @@ puts "Creating Buses..."
   Bus.create!(
     bus_num: Faker::Vehicle.license_plate,
     capacity: rand(30..60),
-    bus_type: ["AC", "Non-AC", "Luxury"].sample
+    bus_type: [ "AC", "Non-AC", "Luxury" ].sample
   )
 end
 buses = Bus.all
