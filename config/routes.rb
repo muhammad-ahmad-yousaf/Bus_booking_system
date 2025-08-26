@@ -14,7 +14,9 @@ Rails.application.routes.draw do
   resources :bookings
   resources :buses
   resources :routes
-  resources :users, only: [:index, :show]
+  resources :users, only: [ :index, :show ]
+
+  match "*unmatched", to: "errors#not_found", via: :all
 
 
 

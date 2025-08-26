@@ -38,6 +38,9 @@ jobs:
       - name: Scan for security vulnerabilities in JavaScript dependencies
         run: bin/importmap audit
 
+      - name: Install JS dependencies (skip audit in CI to avoid 403)
+        run: bin/importmap install --skip-audit
+
   lint:
     runs-on: ubuntu-latest
     steps:
