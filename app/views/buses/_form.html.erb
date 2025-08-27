@@ -1,4 +1,16 @@
 <div class="card p-4">
+  <% if bus.errors.any? %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong><%= pluralize(bus.errors.count, "error") %> prevented this bus from being saved:</strong>
+        <ul class="mb-0">
+          <% bus.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
+
   <%= form_with(model: bus, local: true) do |form| %>
     <div class="mb-3">
       <%= form.label :bus_num, class: "form-label" %>
@@ -7,14 +19,16 @@
 
     <div class="mb-3">
       <%= form.label :capacity, class: "form-label" %>
-      <%= form.number_field :capacity, class: "form-control" %>
+      <%= form.number_field :capacity, min: 1, max: 100, class: "form-control" %>
     </div>
 
     <div class="mb-3">
       <%= form.label :bus_type, class: "form-label" %>
       <%= form.text_field :bus_type, class: "form-control" %>
     </div>
-
-    <%= form.submit class: "btn btn-primary" %>
+    <div class="gap-2">
+      <%= form.submit class: "btn btn-primary" %>
+      <%= link_to "Cancel", (bus.persisted? ? bus_path(bus) : buses_path), class: "btn btn-outline-secondary" %>
+    </div>
   <% end %>
 </div>

@@ -1,28 +1,59 @@
 <% if @booking.errors.any? %>
-  <div class="alert alert-danger">
-    <h4><%= pluralize(@booking.errors.count, "error") %> prohibited this booking from being saved:</h4>
-    <ul>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <h4 class="alert-heading">
+      <%= pluralize(@booking.errors.count, "error") %> prohibited this booking from being saved:
+    </h4>
+    <ul class="mb-0">
       <% @booking.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
       <% end %>
     </ul>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 <% end %>
-<%= form_with(model: booking) do |f| %>
-  <p>
-    <%= f.label :trip_id, "Trip" %><br>
-    <%= f.collection_select :trip_id, Trip.all, :id, ->(t) { "#{t.route.start_location} → #{t.route.end_location} | #{t.departure_time}" }, selected: params[:trip_id] %>
-  </p>
 
-  <p>
-    <%= f.label :seat_number %><br>
-    <%= f.number_field :seat_number %>
-  </p>
+<%= form_with(model: booking, class: "card shadow-sm p-4") do |f| %>
+  <!-- Trip -->
+  <div class="mb-3">
+    <%= f.label :trip_id, "Trip", class: "form-label" %>
+    <%= f.collection_select :trip_id,
+      Trip.all,
+      :id,
+      ->(t) { "#{t.route.start_location} → #{t.route.end_location} | #{t.departure_time.strftime("%d %b %Y %I:%M %p")}" },
+      { prompt: "Select a Trip" },
+      class: "form-select #{'is-invalid' if @booking.errors[:trip_id].any?}" %>
+    <% @booking.errors[:trip_id].each do |msg| %>
+      <div class="invalid-feedback"><%= msg %></div>
+    <% end %>
+  </div>
 
-  <p>
-    <%= f.label :status %><br>
-    <%= f.select :status, Booking.statuses.keys.map { |k| [ k.humanize, k ] } %>
-  </p>
+  <!-- Seat Number -->
+  <div class="mb-3">
+    <%= f.label :seat_number, class: "form-label" %>
+    <%= f.number_field :seat_number,
+        min: 1,
+        max: @booking.trip&.bus&.capacity || 1,
+        class: "form-control #{'is-invalid' if @booking.errors[:seat_number].any?}" %>
+    <% @booking.errors[:seat_number].each do |msg| %>
+      <div class="invalid-feedback"><%= msg %></div>
+    <% end %>
+  </div>
 
-  <p><%= f.submit %></p>
+  <!-- Status -->
+  <div class="mb-3">
+    <%= f.label :status, class: "form-label" %>
+    <%= f.select :status,
+          Booking.statuses.keys.map { |k| [ k.humanize, k ] },
+          {},
+          class: "form-select #{'is-invalid' if @booking.errors[:status].any?}" %>
+    <% @booking.errors[:status].each do |msg| %>
+      <div class="invalid-feedback"><%= msg %></div>
+    <% end %>
+  </div>
+
+  <!-- Submit -->
+  <div class="d-flex gap-2">
+    <%= f.submit (@booking.persisted? ? "Update Booking" : "Create Booking"), class: "btn btn-primary" %>
+    <%= link_to "Cancel", bookings_path, class: "btn btn-outline-secondary" %>
+  </div>
 <% end %>

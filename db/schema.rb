@@ -18,7 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_18_122133) do
     t.bigint "user_id", null: false
     t.bigint "trip_id", null: false
     t.integer "seat_number"
-    t.integer "status"
+    t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["trip_id"], name: "index_bookings_on_trip_id"
@@ -27,15 +27,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_18_122133) do
 
   create_table "buses", force: :cascade do |t|
     t.string "bus_num"
-    t.integer "capacity"
+    t.integer "capacity", null: false
     t.string "bus_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "routes", force: :cascade do |t|
-    t.string "start_location"
-    t.string "end_location"
+    t.string "start_location", null: false
+    t.string "end_location", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -43,8 +43,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_18_122133) do
   create_table "trips", force: :cascade do |t|
     t.bigint "bus_id", null: false
     t.bigint "route_id", null: false
-    t.datetime "departure_time"
-    t.datetime "arrival_time"
+    t.datetime "departure_time", null: false
+    t.datetime "arrival_time", null: false
     t.integer "avail_seats"
     t.decimal "fare"
     t.datetime "created_at", null: false
@@ -55,7 +55,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_18_122133) do
 
   create_table "users", force: :cascade do |t|
     t.string "name"
-    t.string "phone"
     t.integer "role", default: 0, null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false

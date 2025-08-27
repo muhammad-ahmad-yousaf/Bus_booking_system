@@ -1,7 +1,39 @@
-<h2>Booking</h2>
-<p>Trip: <%= @booking.trip.route.start_location %> → <%= @booking.trip.route.end_location %></p>
-<p>Departure: <%= @booking.trip.departure_time %></p>
-<p>Seat: <%= @booking.seat_number %></p>
-<p>Status: <%= @booking.status&.humanize || "Pending" %></p>
+<div class="container mt-5">
+  <div class="card border-dark">
+    <div class="card-header bg-dark text-white">
+      <h3 class="mb-0">Booking Details</h3>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        <strong>Trip:</strong> 
+        <span class="badge bg-primary">
+          <%= @booking.trip.route.start_location %> → <%= @booking.trip.route.end_location %>
+        </span>
+      </p>
 
-<%= link_to "Back", bookings_path %>
+      <p class="card-text">
+        <strong>Departure:</strong>
+        <span class="text-muted"><%= @booking.trip.departure_time.strftime("%d %b %Y %I:%M %p") %></span>
+      </p>
+
+      <p class="card-text">
+        <strong>Seat:</strong> 
+        <span class="badge bg-success"><%= @booking.seat_number %></span>
+      </p>
+
+      <p class="card-text">
+        <strong>Status:</strong> 
+        <% status_color = case @booking.status
+        when "confirmed" then "success"
+        when "pending" then "warning"
+        when "canceled" then "danger"
+        else "secondary"
+        end %>
+        <span class="badge bg-<%= status_color %>"><%= @booking.status&.humanize || "Pending" %></span>
+      </p>
+    </div>
+    <div class="card-footer">
+      <%= link_to "Back", bookings_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+</div>
