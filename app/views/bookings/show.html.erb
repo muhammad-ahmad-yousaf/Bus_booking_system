@@ -24,10 +24,10 @@
       <p class="card-text">
         <strong>Status:</strong> 
         <% status_color = case @booking.status
-          when "confirmed" then "success"
-          when "pending" then "warning"
-          when "canceled" then "danger"
-          else "secondary"
+        when "confirmed" then "success"
+        when "pending" then "warning"
+        when "canceled" then "danger"
+        else "secondary"
         end %>
         <span class="badge bg-<%= status_color %>"><%= @booking.status&.humanize || "Pending" %></span>
       </p>
