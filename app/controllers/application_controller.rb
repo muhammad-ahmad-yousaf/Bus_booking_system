@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
 
 
   def after_sign_in_path_for(resource)
+    stored_location_for(resource) ||
     if resource.role == "admin"
       bookings_path
     else
@@ -18,7 +19,6 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  # add name into the devise sign up
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [ :name ])
     devise_parameter_sanitizer.permit(:account_update, keys: [ :name ])
@@ -32,5 +32,19 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     flash[:alert] = "You are not authorized to perform this action."
     redirect_to root_path
+  end
+
+  def paginate_with_flash(scope, per_page: 20, page_param: params[:page])
+    requested_page = (page_param || 1).to_i
+    paginated = scope.page(requested_page).per(per_page)
+
+    if requested_page > paginated.total_pages && paginated.total_pages > 0
+      flash[:alert] = "Requested page does not exist. Showing the last available page."
+      paginated = scope.page(paginated.total_pages).per(per_page)
+    elsif paginated.empty?
+      flash.now[:alert] = "No records found on this page."
+    end
+
+    paginated
   end
 end

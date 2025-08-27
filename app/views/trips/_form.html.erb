@@ -1,6 +1,6 @@
 <%= form_with(model: trip, local: true, class: "card shadow-sm") do |f| %>
   <div class="card-header">
-    <h5 class="mb-0"><%= trip.persisted? ? "Edit Trip" : "Create Trip" %></h5>
+    <h5 class="mb-0"><%= trip.persisted? ? "Edit Trip" : "Add Trip Information" %></h5>
   </div>
 
   <div class="card-body">
@@ -16,13 +16,11 @@
       </div>
     <% end %>
 
-    <div class="row g-3">
+    <div class="row g-3" >
       <!-- Bus -->
       <div class="col-md-6">
         <%= f.label :bus_id, "Bus", class: "form-label" %>
-        <%= f.collection_select :bus_id, Bus.all, :id, :bus_num,
-              { prompt: "Select a Bus" },
-              class: "form-select #{'is-invalid' if trip.errors[:bus].any? || trip.errors[:bus_id].any?}" %>
+        <%= f.collection_select :bus_id, Bus.all, :id, :bus_num, { prompt: "Select a Bus" }, class: "form-select #{'is-invalid' if trip.errors[:bus].any? || trip.errors[:bus_id].any?}" %>
         <% (trip.errors[:bus] + trip.errors[:bus_id]).each do |e| %>
           <div class="invalid-feedback"><%= e %></div>
         <% end %>
@@ -40,28 +38,30 @@
       </div>
 
       <!-- Departure & Arrival -->
-      <div class="col-md-6">
-        <%= f.label :departure_time, class: "form-label" %>
-        <%= f.datetime_local_field :departure_time,
-              value: (trip.departure_time&.strftime("%Y-%m-%dT%H:%M")),
-              min: Time.current.strftime("%Y-%m-%dT%H:%M"),
-              class: "form-control #{'is-invalid' if trip.errors[:departure_time].any?}" %>
-        <% trip.errors[:departure_time].each do |e| %>
-          <div class="invalid-feedback"><%= e %></div>
-        <% end %>
-        <div class="form-text">Must not be in the past.</div>
-      </div>
+      <div class="row g-3" data-controller="trip-time">
+        <div class="col-md-6">
+          <%= f.label :departure_time, class: "form-label" %>
+          <%= f.datetime_local_field :departure_time,
+                value: (trip.departure_time&.strftime("%Y-%m-%dT%H:%M")),
+                min: Time.current.strftime("%Y-%m-%dT%H:%M"),
+                class: "form-control #{'is-invalid' if trip.errors[:departure_time].any?}" %>
+          <% trip.errors[:departure_time].each do |e| %>
+            <div class="invalid-feedback"><%= e %></div>
+          <% end %>
+          <div class="form-text">Must not be in the past.</div>
+        </div>
 
-      <div class="col-md-6">
-        <%= f.label :arrival_time, class: "form-label" %>
-        <%= f.datetime_local_field :arrival_time,
-              value: (trip.arrival_time&.strftime("%Y-%m-%dT%H:%M")),
-              class: "form-control #{'is-invalid' if trip.errors[:arrival_time].any?}",
-              data: { controller: "trip-time" } %>
-        <% trip.errors[:arrival_time].each do |e| %>
-          <div class="invalid-feedback"><%= e %></div>
-        <% end %>
-        <div class="form-text">Must be after the departure time.</div>
+        <div class="col-md-6">
+          <%= f.label :arrival_time, class: "form-label" %>
+          <%= f.datetime_local_field :arrival_time,
+                value: (trip.arrival_time&.strftime("%Y-%m-%dT%H:%M")),
+                class: "form-control #{'is-invalid' if trip.errors[:arrival_time].any?}",
+                data: { controller: "trip-time" } %>
+          <% trip.errors[:arrival_time].each do |e| %>
+            <div class="invalid-feedback"><%= e %></div>
+          <% end %>
+          <div class="form-text">Must be after the departure time.</div>
+        </div>
       </div>
 
       <!-- Seats -->
@@ -76,7 +76,7 @@
       <!-- Fare -->
       <div class="col-md-6">
         <%= f.label :fare, "Fare", class: "form-label" %>
-        <%= f.number_field :fare, step: 0.01, min: 0, class: "form-control #{'is-invalid' if trip.errors[:fare].any?}" %>
+        <%= f.number_field :fare, step: 1, min: 0, class: "form-control #{'is-invalid' if trip.errors[:fare].any?}" %>
         <% trip.errors[:fare].each do |e| %>
           <div class="invalid-feedback"><%= e %></div>
         <% end %>
@@ -91,31 +91,4 @@
   </div>
 <% end %>
 
-<!-- Tiny JS guard: arrival >= departure and arrival min follows departure -->
-<script>
-  document.addEventListener("turbo:load", syncTimes);
-  document.addEventListener("DOMContentLoaded", syncTimes);
 
-  function syncTimes() {
-    const dep = document.getElementById("trip_departure_time");
-    const arr = document.getElementById("trip_arrival_time");
-    if (!dep || !arr) return;
-
-    const setMins = () => {
-      // Keep departure >= now
-      const now = new Date();
-      const pad = n => String(n).padStart(2, "0");
-      const nowLocal = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
-      if (!dep.min || dep.min < nowLocal) dep.min = nowLocal;
-
-      // Arrival cannot be before departure
-      if (dep.value) {
-        arr.min = dep.value;
-        if (arr.value && arr.value < dep.value) arr.value = dep.value;
-      }
-    };
-
-    setMins();
-    dep.addEventListener("change", setMins);
-  }
-</script>

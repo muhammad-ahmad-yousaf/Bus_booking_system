@@ -3,7 +3,7 @@ class RoutesController < ApplicationController
   before_action :set_route, only: [:show, :edit, :update, :destroy]
 
   def index
-    @routes = Route.all
+    @routes = paginate_with_flash(Route.all.order(created_at: :desc), per_page: 15)
     authorize @routes
   end
 
@@ -44,7 +44,8 @@ class RoutesController < ApplicationController
 
   private
     def set_route
-      @route = Route.find(params[:id])
+      @route = Route.find_by(id: params[:id])
+      redirect_to routes_path, alert: "Route not Found!! " unless @route
     end
 
     def route_params

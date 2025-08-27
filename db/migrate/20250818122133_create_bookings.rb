@@ -4,7 +4,7 @@ class CreateBookings < ActiveRecord::Migration[8.0]
       t.references :user, null: false, foreign_key: true
       t.references :trip, null: false, foreign_key: true
       t.integer :seat_number
-      t.integer :status
+      t.integer :status, default: 0, null: false
 
       t.timestamps
     end

@@ -56,7 +56,7 @@
                 <% if user_signed_in? %>
                   <%= link_to "Book Now", new_booking_path(trip_id: trip.id), class: "btn btn-success btn-sm" %>
                 <% else %>
-                  <%= link_to "Login to Book", new_user_session_path, class: "btn btn-outline-primary btn-sm" %>
+                  <%= link_to "Login to Book", new_user_session_path(return_to: new_booking_path(trip_id: trip.id)), class: "btn btn-outline-primary btn-sm" %>
                 <% end %>
               <% else %>
                 <button class="btn btn-secondary btn-sm" disabled>Sold Out</button>

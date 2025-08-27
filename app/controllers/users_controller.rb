@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :authorize_admin!
 
   def index
-    @users = User.all.order(created_at: :desc).page(params[:page]).per(10)
+    @users = paginate_with_flash(User.all.order(created_at: :desc), per_page: 15)
   end
 
   def show

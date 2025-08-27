@@ -1,14 +1,15 @@
 <div class="card p-4">
   <% if route.errors.any? %>
-    <div class="alert alert-danger">
-      <h4><%= pluralize(route.errors.count, "error") %> prevented this route from being saved:</h4>
-      <ul>
-        <% route.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong><%= pluralize(route.errors.count, "error") %> prevented this route from being saved:</strong>
+        <ul class="mb-0">
+          <% route.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
 
   <%= form_with(model: route, local: true) do |form| %>
     <div class="mb-3">
@@ -21,6 +22,10 @@
       <%= form.text_field :end_location, class: "form-control" %>
     </div>
 
+    
+    <div class="d-flex gap-2">
     <%= form.submit "Save Route", class: "btn btn-primary" %>
+    <%= link_to "Cancel", (route.persisted? ? route_path(route) : routes_path), class: "btn btn-outline-secondary" %>
+    </div>
   <% end %>
 </div>

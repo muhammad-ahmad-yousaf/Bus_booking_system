@@ -3,8 +3,7 @@ require 'faker'
 # === USERS ===
 puts "Creating Admin..."
 admin = User.find_or_create_by!(email: "admin@example.com") do |user|
-  user.name = "Admin User"
-  user.phone = "03001234567"
+  user.name = "Ahmad"
   user.password = "password"
   user.role = 1  # assuming 0=user, 1=admin
 end
@@ -13,7 +12,6 @@ puts "Creating Users..."
 50.times do
   User.create!(
     name: Faker::Name.name,
-    phone: Faker::PhoneNumber.cell_phone_in_e164,
     email: Faker::Internet.unique.email,
     password: "password",
     role: 0

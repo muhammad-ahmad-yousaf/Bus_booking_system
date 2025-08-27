@@ -3,7 +3,7 @@ class TripsController < ApplicationController
   before_action :set_trip, only: [:show, :edit, :update, :destroy]
 
   def index
-    @trips = Trip.includes(:bus, :route).all.order(created_at: :desc).page(params[:page]).per(10)
+    @trips = paginate_with_flash(Trip.includes(:bus, :route).all.order(created_at: :desc), per_page: 15)
     authorize Trip
   end
 
@@ -12,30 +12,13 @@ class TripsController < ApplicationController
 
 
   def search
-    if current_user&.admin?
-      redirect_to bookings_path
-      return
-    end
-
+    redirect_to bookings_path and return if current_user&.admin?
     @routes = Route.all
     @trips = []
-
     if params[:date].present? || (params[:start_location].present? && params[:end_location].present?)
-      @trips = Trip.includes(:bus, :route)
-
-      if params[:date].present?
-        date = Date.parse(params[:date]) rescue nil
-        @trips = @trips.where(departure_time: date.beginning_of_day..date.end_of_day) if date
-      end
-
-      if params[:start_location].present? && params[:end_location].present?
-        @trips = @trips.joins(:route).where(routes: { start_location: params[:start_location], end_location: params[:end_location] })
-      end
-      @trips = @trips.where("departure_time >= ?", Time.current)
+      @trips = Trip.search(params)
     end
   end
-
-
 
   def new
     @trip = Trip.new
@@ -71,7 +54,8 @@ class TripsController < ApplicationController
 
   private
     def set_trip
-      @trip = Trip.find(params[:id])
+      @trip = Trip.find_by(id: params[:id])
+      redirect_to trips_path, alert: "Trip not found!" unless @trip
     end
 
     def trip_params

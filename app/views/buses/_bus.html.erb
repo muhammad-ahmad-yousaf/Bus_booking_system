@@ -1,17 +1,25 @@
-<div id="<%= dom_id bus %>">
-  <p>
-    <strong>Bus num:</strong>
-    <%= bus.bus_num %>
-  </p>
+<div id="<%= dom_id(bus) %>" class="card mb-4 shadow-lg border-primary">
+  <div class="card-header bg-primary text-white">
+    <h5 class="mb-0">Bus <%= bus.bus_num %></h5>
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+      <strong>Capacity:</strong> <span class="badge bg-success"><%= bus.capacity %> seats</span>
+    </p>
 
-  <p>
-    <strong>Capacity:</strong>
-    <%= bus.capacity %>
-  </p>
-
-  <p>
-    <strong>Bus type:</strong>
-    <%= bus.bus_type %>
-  </p>
-
+    <p class="card-text">
+      <strong>Bus type:</strong>
+      <% case bus.bus_type.downcase %>
+      <% when "ac" %>
+        <span class="badge bg-info text-dark">AC</span>
+      <% when "non-ac" %>
+        <span class="badge bg-secondary">Non-AC</span>
+      <% else %>
+        <span class="badge bg-light text-dark"><%= bus.bus_type %></span>
+      <% end %>
+    </p>
+  </div>
+  <div class="card-footer text-end">
+    <%= link_to "View Details", bus_path(bus), class: "btn btn-primary btn-sm" %>
+  </div>
 </div>
